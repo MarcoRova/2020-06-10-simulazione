@@ -7,6 +7,7 @@ package it.polito.tdp.imdb;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import it.polito.tdp.imdb.model.Actor;
 import it.polito.tdp.imdb.model.Model;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,10 +36,10 @@ public class FXMLController {
     private Button btnSimulazione; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxGenere"
-    private ComboBox<?> boxGenere; // Value injected by FXMLLoader
+    private ComboBox<String> boxGenere; // Value injected by FXMLLoader
 
     @FXML // fx:id="boxAttore"
-    private ComboBox<?> boxAttore; // Value injected by FXMLLoader
+    private ComboBox<Actor> boxAttore; // Value injected by FXMLLoader
 
     @FXML // fx:id="txtGiorni"
     private TextField txtGiorni; // Value injected by FXMLLoader
@@ -49,11 +50,46 @@ public class FXMLController {
     @FXML
     void doAttoriSimili(ActionEvent event) {
 
+    	txtResult.clear();
+    	Actor actor = boxAttore.getValue();
+    	if(actor == null) {
+        	txtResult.clear();
+        	txtResult.appendText("Seleziona un attore!\n");;
+        	return ;
+    	}
+    	
+    	this.txtResult.setText("Ci sono "+this.model.getConnectedActors(actor).size()+ " attori simili a: "+actor+"\n\n");
+    	
+    	for(Actor a : this.model.getConnectedActors(actor)) {
+    		this.txtResult.appendText(""+a+"\n");
+    	}
     }
 
     @FXML
     void doCreaGrafo(ActionEvent event) {
 
+    	this.txtResult.clear();
+    	
+    	String genre = this.boxGenere.getValue();
+    	
+    	if(genre == null) {
+    		this.txtResult.setText("Selezionare un genere!");
+    		return;
+    	}
+    	
+    	this.model.creaGrafo(genre);
+    	
+    	this.txtResult.appendText(this.model.infoGrafo());
+    	
+    	if(this.model.getGrafo() == null) {
+    		this.txtResult.setText("Crea prima il grafo.");
+    		return;
+    	}
+    	
+    	this.boxAttore.getItems().addAll(this.model.getVertici(genre));
+    	
+    	
+    	
     }
 
     @FXML
@@ -75,5 +111,7 @@ public class FXMLController {
     
     public void setModel(Model model) {
     	this.model = model;
+    	this.boxGenere.getItems().addAll(this.model.getAllGenres());
+    	
     }
 }

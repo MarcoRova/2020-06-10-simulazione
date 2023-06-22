@@ -21,6 +21,7 @@ public class Model {
 	private ImdbDAO dao;
 	private Graph<Actor, DefaultWeightedEdge> grafo;
 	private Map<Integer, Actor> actorsIDMap;
+	private Simulator sim;
 
 	public Model() {
 		super();
@@ -81,5 +82,29 @@ public class Model {
 	
 	public Graph<Actor, DefaultWeightedEdge> getGrafo(){
 		return this.grafo;
+	}
+	
+	
+	public void simulate(int n) {
+
+		sim = new Simulator(n, grafo);
+		
+		sim.init();
+		sim.run();
+		
+	}
+	
+	public Collection<Actor> getInterviewedActors(){
+		if(sim == null){
+			return null;
+		}
+		return sim.getInterviewedActors();
+	}
+	
+	public Integer getPauses(){
+		if(sim == null){
+			return null;
+		}
+		return sim.getPauses();
 	}
 }

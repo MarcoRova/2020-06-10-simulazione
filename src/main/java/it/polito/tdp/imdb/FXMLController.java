@@ -94,6 +94,31 @@ public class FXMLController {
 
     @FXML
     void doSimulazione(ActionEvent event) {
+    	
+    	this.txtResult.clear();
+    	
+    	Integer n = null;
+    	
+    	try {
+    		n = Integer.parseInt(txtGiorni.getText());
+    	} catch (NumberFormatException e) {
+    		txtResult.clear();
+        	txtResult.appendText("Inserisci un valore numerico per n!\n");;
+        	return ;
+    	}
+    	
+    	if(this.model.getGrafo() == null) {
+    		this.txtResult.setText("Crea prima il grafo.");
+    		return;
+    	}
+    	
+    	this.model.simulate(n);
+    	
+    	txtResult.appendText("PAUSE: " + model.getPauses() + "\n\n");
+    	txtResult.appendText("ATTORI INTERVISTATI: \n");
+    	for(Actor a : model.getInterviewedActors()) {
+    		txtResult.appendText(a.toString() + "\n");
+    	}
 
     }
 
